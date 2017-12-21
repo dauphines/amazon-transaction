@@ -27,22 +27,24 @@ var paymentMethods = bookshelf.Model.extend({
 //   console.error(err);
 // });
 
+/* Updates the row corresponding to the userTransId to status (Completed or Failed) */
+module.exports.update = function update(userTransId, status) {
 
-module.exports.storeTransaction = function storeTransaction(obj) {
+}
+
+module.exports.storeTransaction = function storeTransaction(obj, callback) {
 	//paymentId
 	//userId
 	//cartTotal
 	console.log('trying to store to Database now, yaayyy');
-// 	new paymentMethods({
-// 		id: paymentId,
-// 		// lastFourDigits:,
-// 		// type:,
-// 		userId: userId
-// 	}).save().then(function(newRow) {
-
-// 	}).catch(function(err) {
-// 		// Handle errors
-// 	});;
+	new paymentMethods({
+		id: paymentId,
+		userId: userId
+	}).save().then(function(newRow) {
+    console.log('saved the paymentMethid');
+	}).catch(function(err) {
+		// Handle errors
+	});;
 
 // 	new UserTrans({
 // 	  date: new Date(),

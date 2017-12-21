@@ -19,7 +19,8 @@ testProductsArr = [
 	}
 ]
 
-module.exports = {
+// Object that will be sent to transactions upon purchase:
+module.exports.processTransTestInput = {
 	userId: 123,
 	fullName: 'Name',
   phone: '978-786-4567',
@@ -44,3 +45,13 @@ module.exports = {
     country: 'USA'
   }
 }
+
+// Object that will be sent to transactions upon subscription:
+module.exports.subscribeTestInput = {
+  userId: 123, // this is a string of a userId
+};
+
+// Object that will be sent to transactions upon unsubscribe:
+module.exports.unsubscribeTestInput = {
+  userId: 123, // this is a string of a userId
+};
