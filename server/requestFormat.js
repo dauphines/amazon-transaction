@@ -21,11 +21,11 @@ testProductsArr = [
 
 // Object that will be sent to transactions upon purchase:
 module.exports.processTransTestInput = {
-	userId: 123,
-	fullName: 'Name',
+	userId: 1,
+	fullName: 'Enki',
   phone: '978-786-4567',
 	products: testProductsArr,
-	paymentId: 54321,
+	paymentId: 1,
 	cartTotal: 105,
 	primeTrialSignUp: true,
 	shippingAddress: {
@@ -33,7 +33,7 @@ module.exports.processTransTestInput = {
     addressLine2: 'address2',
     city: 'somecity',
     state: 'CA',
-    zip: 12345,
+    zip: '12345',
     country: 'USA'
   },
   billingAddress: {
@@ -41,7 +41,7 @@ module.exports.processTransTestInput = {
     addressLine2: 'address2',
     city: 'somecity',
     state: 'CA',
-    zip: 12345,
+    zip: '12345',
     country: 'USA'
   }
 }

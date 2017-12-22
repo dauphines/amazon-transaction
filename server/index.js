@@ -46,7 +46,11 @@ app.post('/processTrans', function(req, res) {
   	console.log('inventory error');
   });
 
-   /****** Insert a new transaction to the DB with status, 'pending' *********/
+  // pg.storeTransaction(obj, function (userTransId) {
+
+  // })
+
+  /****** Insert a new transaction to the DB with status, 'pending' *********/
 	pg.storeTransaction(obj, function(userTransId) {
 	  var vendors = getVendors(products);
 	  var paymentData = {
