@@ -22,9 +22,18 @@ var paymentMethods = bookshelf.Model.extend({
 });
 
 /* Updates the row corresponding to the userTransId to status (Completed or Failed) */
-module.exports.update = function(userTransId, status) {
+module.exports.update = function(userTransId, status, callback) {
     console.log('userTransId: ', userTransId);
     //get the transaction with this id from UserTrans and edit the status to be Completed/Failed based on status
+    new usertrans({
+      id: userTransId
+    }).save( {status: status}, {patch: true})
+    .then(function (model) {
+      callback('Success');
+    })
+    .then(function(error) {
+      callback('Failed');
+    });
 }
 
 module.exports.storeTransaction = function(obj, callback) {

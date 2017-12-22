@@ -1,10 +1,10 @@
 testProductsArr = [
 	{	
 		productId: 12345,
-		productName: "Enkis fabulous product",
+		productName: "fabulous gift",
 		price: 10,
 		vendorId: 1,
-		vendorName: 'Enki',
+		vendorName: 'Santa',
 		quantity: 10,
 		isPrimeProduct: true
 	},
@@ -22,11 +22,11 @@ testProductsArr = [
 // Object that will be sent to transactions upon purchase:
 module.exports.processTransTestInput = {
 	userId: 1,
-	fullName: 'Enki',
+	fullName: 'Enkhtushig Namkhai',
   phone: '978-786-4567',
 	products: testProductsArr,
-	paymentId: 1,
-	cartTotal: 105,
+	paymentId: 2,
+	cartTotal: 100,
 	primeTrialSignUp: true,
 	shippingAddress: {
     addressLine1: 'address1',

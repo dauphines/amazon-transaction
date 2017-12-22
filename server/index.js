@@ -46,12 +46,11 @@ app.post('/processTrans', function(req, res) {
   	console.log('inventory error');
   });
 
-  // pg.storeTransaction(obj, function (userTransId) {
-
-  // })
 
   /****** Insert a new transaction to the DB with status, 'pending' *********/
 	pg.storeTransaction(obj, function(userTransId) {
+		//AFTER TRANS IS STORED SUCCESSFULLY
+		console.log('Stored Trans and the products to their tables');
 	  var vendors = getVendors(products);
 	  var paymentData = {
 	  	userId: userId, 
@@ -62,27 +61,34 @@ app.post('/processTrans', function(req, res) {
 	  /******************* Telling ghost service to complete the transaction **********************/
 	  axios.post('http://localhost:5000/ghost/completeTransaction', paymentData)
 	  .then(function (response) {
+	  	/********************* Things to do when trans successful *******************************/
+	  	res.send("Successful Transaction\n");
 	  	if (primeTrialSignUp) {
 		  	var date = new Date();  //Wed Dec 20 2017 15:08:02 GMT-0800 (PST) in ISO Format
 		    axios.put('/prime/signup', {userId: userId, primeStartDate: date, totalSpentAtTrialStart: cartTotal});
 		  }
-	  	res.send("Successful Transaction\n");
+	  	
 		  //on success from ghost service, update the status of the transaction in DB to completed
-	  	pg.update(userTransId, 'Completed');
+	  	pg.update(userTransId, 'completed', function(status) {
+	  		if (status === 'Failed') {
+		 		};
+	  	});
 	  })
 	  .catch(function (error) {
-			//if fails, send a res to client saying, transaction failed
+	  	/********************* Things to do when trans Fails *******************************/
 			res.send("Error in Transaction\n");
-			//an undo request to Inventory
 			axios.put('http://localhost:5000/inventory/undo', products)
 			.catch(function(error) {
 				console.log('inventory could not undo request');
 			});
 			//on error from ghost service, update the status of the transaction in DB to failed
-	  	pg.update(userTransId, 'Failed');
-	  });
-	});
+	  	pg.update(userTransId, 'failed', function(status) {
+	  		if (status === 'Failed') {
+		 		};
+	  	});
 
+	  });
+	});  //
 
 });
 
