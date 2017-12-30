@@ -1,3 +1,5 @@
+// Add this to the VERY top of the first file loaded in your app
+// var apm = require('elastic-apm-node').start();
 var express = require('express');
 var axios = require('axios');
 var bodyParser = require('body-parser');
@@ -6,9 +8,12 @@ var inputs = require('./requestFormat.js');
 
 var app = express();
 app.use(bodyParser.json());
+
 app.listen(8000, function () { 
   console.log('listening on port 8000!') 
 });
+
+
 
 //calculate how much to charge each vendors based on the product quantity and price to send to the Ghost Service
 function getVendors(products) {
@@ -27,10 +32,17 @@ function getVendors(products) {
 }
 
 
-
 //*********************REQ FROM CLIENT************************************
 app.post('/processTrans', function(req, res) {
-	var obj = inputs.processTransTestInput; //change to req.body later
+	// var obj = inputs.processTransTestInput; //change to req.body later
+	console.log('calling processTrans hereee', req.body);
+	var obj = req.body;
+
+	/* Uncomment this if not load testing. */
+	obj.products = JSON.parse(obj.products);
+	obj.shippingAddress = JSON.parse(obj.shippingAddress);
+	obj.billingAddress = JSON.parse(obj.billingAddress);
+
 	var userId = obj.userId;
 	var products = obj.products;
 	var cartTotal = obj.cartTotal;
@@ -48,8 +60,11 @@ app.post('/processTrans', function(req, res) {
 
 
   /****** Insert a new transaction to the DB with status, 'pending' *********/
-	pg.storeTransaction(obj, function(userTransId) {
+	pg.storeTransaction(obj, function(userTransId, err) {
 		//AFTER TRANS IS STORED SUCCESSFULLY
+		if (err) {
+			res.send('error...');
+		}
 		console.log('Stored Trans and the products to their tables');
 	  var vendors = getVendors(products);
 	  var paymentData = {
@@ -75,7 +90,7 @@ app.post('/processTrans', function(req, res) {
 	  	});
 	  })
 	  .catch(function (error) {
-	  	/********************* Things to do when trans Fails *******************************/
+	  	// ******************** Things to do when trans Fails ******************************
 			res.send("Error in Transaction\n");
 			axios.put('http://localhost:5000/inventory/undo', products)
 			.catch(function(error) {
@@ -86,7 +101,6 @@ app.post('/processTrans', function(req, res) {
 	  		if (status === 'Failed') {
 		 		};
 	  	});
-
 	  });
 	});  //
 
@@ -100,6 +114,8 @@ app.post('/unsubscribe', function(req, res) {
 	/********* CHANGE INPUTS.UNBSCRIBETESTINPUT TO REQ.BODY LATER *********/
 	var userId = inputs.unsubscribeTestInput.userId; // object with a userId key
   var date = new Date();
+  //cancel charging card monthly.
+  //if a person already had a free trial and canceled, don't give it to them again.
   axios.put('http://localhost:5000/prime/cancel', {userId: userId, primeTrialEndDate: date})
   .then(function(response) {
   	console.log('canceled the trial');
@@ -120,6 +136,9 @@ app.post('/unsubscribe', function(req, res) {
 //********************REQUEST FROM CLIENT TO SUBSCRIBE, 0 PURCHASES************
 app.post('/subscribe', function(req, res) {
 	/********* CHANGE INPUTS.SUBSCRIBETESTINPUT TO REQ.BODY LATER *********/
+	 
+	//if a person already had a free trial and canceled, don't give it to them again.
+	//send a response that says, free trial not available.
 	userId = inputs.subscribeTestInput.userId;
 	var date = new Date();
 	//Tell users that a prime trial sign up has occured

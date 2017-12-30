@@ -1,0 +1,50 @@
+config:
+  target: 'http://localhost:8000'
+  http:
+    pool: 10 # All HTTP requests from all virtual users will be sent over the same 10 connections
+  phases:
+    - duration: 60
+      arrivalRate: 1000
+      name: "Create 5 virtual users every second for 2 minute"
+  processor: "./loadTest.js"
+scenarios:
+  - name: "user is purchasing"
+    flow:
+      - function: "generateRandomData"
+      - post:
+          url: "/processTrans"
+          json:
+            userId: "{{ userId }}"
+            fullName: "{{ fullName }}"
+            phone: "{{ phone }}"
+            products: "{{ products }}"
+            paymentId: "{{ paymentId }}"
+            cartTotal: "{{ cartTotal }}"
+            primeTrialSignUp: "{{ primeTrialSignUp }}"
+            shippingAddress: "{{ shippingAddress }}"
+            billingAddress: "{{ billingAddress }}"
+
+
+# Format of data it sends to processTrans
+# { 
+# userId: '1673449',
+
+# fullName: 'Cyril Hegmann V',
+
+# phone: '832-461-3270',
+
+# products: 
+#   '[{"productId":86834,"productName":"Generic Cotton Car","price":"636.00","vendorId":24297,"vendorName":"Grady LLC","quantity":4,"isPrimeProduct":"false"}]',
+
+# paymentId: '1903593',
+
+# cartTotal: '811.00',
+
+# primeTrialSignUp: 'false',
+
+# shippingAddress: 
+#   '{"addressLine1":"9003 Linnea Turnpike","addressLine2":"Apt. 359","city":"Lake Roxane","state":"Rhode Island","zip":"62476","country":"Palestinian Territory"}',
+
+# billingAddress: 
+#   '{"addressLine1":"9003 Linnea Turnpike","addressLine2":"Apt. 359","city":"Lake Roxane","state":"Rhode Island","zip":"62476","country":"Palestinian Territory"}' 
+# }

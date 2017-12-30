@@ -7,6 +7,8 @@ var knex = require('knex')({
   }
 });
 
+//might have to make this a noSQL database
+
 var bookshelf = require('bookshelf')(knex);
 
 var usertrans = bookshelf.Model.extend({
@@ -37,16 +39,15 @@ module.exports.update = function(userTransId, status, callback) {
 }
 
 module.exports.storeTransaction = function(obj, callback) {
-	console.log('trying to store to Database now, yaayyy');
-
-
+	console.log('trying to store to Database now');
+  
 	new usertrans({
 	  date: new Date(),
 	  userid: obj.userId,
 	  paymentmethodid: obj.paymentId,    
 	  status: 'pending',
 	  fullname: obj.fullName,
-	  addressline1: obj.shippingAddress.addressLine1,
+	  addressline1: obj.shippingAddress.addressLine1, 
 	  addressline2: obj.shippingAddress.addressLine2, 
 	  city: obj.shippingAddress.city,
 	  state: obj.shippingAddress.state,
@@ -55,9 +56,6 @@ module.exports.storeTransaction = function(obj, callback) {
 	  phone: obj.phone,
 	  grandtotal: obj.cartTotal
 	}).save().then(function(newRow) {
-
-    console.log('here is the userTransId?: ', newRow.id);
-
     /**************** AFTER USER TRANS IS STORED *****************/
     var productsToInsert = [];
     for (var i = 0; i < obj.products.length; i++) {
@@ -81,59 +79,18 @@ module.exports.storeTransaction = function(obj, callback) {
     knex.batchInsert('purchasedproducts', productsToInsert)
     .then(function(ids) {
         console.log('batch load successful');
-        callback(newRow.id);
-    })
-    .catch(function(error) {
-        console.log('batch load fail');
-        console.log(error);
+        callback(newRow.id, null);
+    }).catch(function(err) {
+      callback(null, err);
     });
 
   }).catch(function(err) {
     // Handle errors
     console.log('error in saving to DATABASE');
     console.log(err);
+    callback(null, err);
   });
 }
-
-
- // newRow = ModelBase {
-  // attributes: 
-  //  { date: 2017-12-22T07:28:03.374Z,
-  //    userid: 1,
-  //    paymentmethodid: 1,
-  //    status: 'pending',
-  //    fullname: 'Enki',
-  //    addressline1: 'address1',
-  //    addressline2: 'address2',
-  //    city: 'somecity',
-  //    state: 'CA',
-  //    zip: '12345',
-  //    country: 'USA',
-  //    phone: '978-786-4567',
-  //    grandtotal: 105,
-  //    id: 2000001 },
-  // _previousAttributes: 
-  //  { date: 2017-12-22T07:28:03.374Z,
-  //    userid: 1,
-  //    paymentmethodid: 1,
-  //    status: 'pending',
-  //    fullname: 'Enki',
-  //    addressline1: 'address1',
-  //    addressline2: 'address2',
-  //    city: 'somecity',
-  //    state: 'CA',
-  //    zip: '12345',
-  //    country: 'USA',
-  //    phone: '978-786-4567',
-  //    grandtotal: 105,
-  //    id: 2000001 },
-  // changed: {},
-  // relations: {},
-  // cid: 'c1',
-  // _knex: null,
-  // id: 2000001 }
-
-
 
 
   // purchasedproducts.query().where('id', 1).then(function(user) {
