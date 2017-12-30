@@ -1,5 +1,8 @@
 // Add this to the VERY top of the first file loaded in your app
-// var apm = require('elastic-apm-node').start();
+var apm = require('elastic-apm-node').start({
+	appName: 'transaction',
+	serverUrl: 'http://localhost:8200'
+});
 var express = require('express');
 var axios = require('axios');
 var bodyParser = require('body-parser');
@@ -8,6 +11,8 @@ var inputs = require('./requestFormat.js');
 
 var app = express();
 app.use(bodyParser.json());
+// any errors caught by Express can be logged by the agent as well
+app.use(apm.middleware.express())
 
 app.listen(8000, function () { 
   console.log('listening on port 8000!') 
@@ -35,7 +40,7 @@ function getVendors(products) {
 //*********************REQ FROM CLIENT************************************
 app.post('/processTrans', function(req, res) {
 	// var obj = inputs.processTransTestInput; //change to req.body later
-	console.log('calling processTrans hereee', req.body);
+	console.log('calling processTrans hereee');
 	var obj = req.body;
 
 	/* Uncomment this if not load testing. */
