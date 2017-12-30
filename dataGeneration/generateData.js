@@ -27,10 +27,7 @@ function generatePaymentMethods() {
     //4000000
     for (var i = 1; i <= 4000000; i++) {
       var paymentId = i;
-      // var lastFourDigits = faker.helpers.replaceSymbolWithNumber("####");
-      // var type = typeOfPayment[Math.floor(Math.random() * typeOfPayment.length)];
       var userId = count;
-
       if (second) {
         second = false;
         count += 1;
@@ -46,7 +43,6 @@ function generatePaymentMethods() {
 }
 
 //a user makes one transactions
-//first step is to write 1 line of data that resembles my schema to a csv file.
 function generateUserTransData() {
   var first = true;
   var writeStream = fs.createWriteStream('./dataFiles/UserTrans.csv', {'flags': 'a', 'encoding': null});
@@ -66,8 +62,7 @@ function generateUserTransData() {
       var userTransId = i; //number from 1 - 2M
       var date = faker.date.past().toISOString();
 
-      var userId = i; //could be random uui,
-      //insert into payment methods table userId 2 times id, id+1
+      var userId = i;
       count = count + 2;
       var paymentMethodId = count; //each user has different paymentIds
 
@@ -82,8 +77,8 @@ function generateUserTransData() {
       var phone = faker.fake("{{phone.phoneNumberFormat}}");
       var grandTotal = faker.commerce.price();
 
-      //console.log(`${userTransId}, ${date}, ${userId}, ${paymentMethodId}, ${status}, ${fullName}, ${addressLine1}, ${addressLine2}, ${city}, ${state}, ${zip}, ${country}, ${phone}, ${grandTotal}\n`);
-      writeStream.write(`${date}; ${userId}; ${paymentMethodId}; ${status}; ${fullName}; ${addressLine1}; ${addressLine2}; ${city}; ${state}; ${zip}; ${country}; ${phone}; ${grandTotal}\n`);
+      writeStream.write(`${date}; ${userId}; ${paymentMethodId}; ${status}; ${fullName};
+      ${addressLine1}; ${addressLine2}; ${city}; ${state}; ${zip}; ${country}; ${phone}; ${grandTotal}\n`);
     }
 
     writeStream.end();
