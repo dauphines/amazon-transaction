@@ -68,13 +68,13 @@ function generateUserTransData() {
 
       var status = statusArr[Math.floor(Math.random() * 3)];
       var fullName = faker.name.findName();
-      var addressLine1 = faker.fake("{{address.streetAddress}}");
-      var addressLine2 = faker.fake("{{address.secondaryAddress}}");
-      var city = faker.fake("{{address.city}}");
-      var state = faker.fake("{{address.state}}");
-      var zip = faker.fake("{{address.zipCode}}");
-      var country = faker.fake("{{address.country}}");
-      var phone = faker.fake("{{phone.phoneNumberFormat}}");
+      var addressLine1 = faker.address.streetAddress();
+      var addressLine2 = faker.address.secondaryAddress();
+      var city = faker.address.city();
+      var state = faker.address.state();
+      var zip = faker.address.zipCode();
+      var country = faker.address.country();
+      var phone = faker.phone.phoneNumberFormat();
       var grandTotal = faker.commerce.price();
 
       writeStream.write(`${date}; ${userId}; ${paymentMethodId}; ${status}; ${fullName};
@@ -110,7 +110,7 @@ function generatePurchasedProds() {
       var productId = faker.random.number();
       var productName = faker.commerce.productName();
       var productImgUrl = faker.image.imageUrl();
-      var isPrimeProduct = faker.fake("{{random.boolean}}");
+      var isPrimeProduct = faker.random.boolean();
       var productQuantity = getRandomArbitrary(1,5);
       var pricePerItem = faker.commerce.price();
 
