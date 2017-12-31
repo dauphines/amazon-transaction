@@ -77,8 +77,7 @@ function generateUserTransData() {
       var phone = faker.phone.phoneNumberFormat();
       var grandTotal = faker.commerce.price();
 
-      writeStream.write(`${date}; ${userId}; ${paymentMethodId}; ${status}; ${fullName};
-      ${addressLine1}; ${addressLine2}; ${city}; ${state}; ${zip}; ${country}; ${phone}; ${grandTotal}\n`);
+      writeStream.write(`${date}; ${userId}; ${paymentMethodId}; ${status}; ${fullName}; ${addressLine1}; ${addressLine2}; ${city}; ${state}; ${zip}; ${country}; ${phone}; ${grandTotal}\n`);
     }
 
     writeStream.end();
