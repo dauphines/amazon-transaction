@@ -40,11 +40,17 @@ app.listen(5000, function () {
 	//    [ { vendorId: 1, vendorName: 'Enki', depositAmount: 9999990 },
 	//      { vendorId: 2, vendorName: 'Someone else', depositAmount: 5 } ],
 	//   cartTotal: 100 }
-		console.log('GhostSErvice: got a request from transactions');
+		console.log('GhostService: got a request from transactions');
 		console.log(req.body);
+
+		//try to generate users from 1-2000000 and make each of them
+		// have two paymentIds.
+
+		//have vendors, make each vendor have a account to deposit money into.
+
 		res.send('trans done')
 	})
 
 /**** TESTING POSTS TO CLIENT? *****/
-
-
+//Client stores the  ->
+//maps userId to the paymentIds here.
